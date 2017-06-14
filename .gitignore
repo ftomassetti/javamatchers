@@ -1,6 +1,7 @@
 javamatchers.iml
 javamatchers.ipr
 javamatchers.iws
+.idea
 .gradle
 build
 out
