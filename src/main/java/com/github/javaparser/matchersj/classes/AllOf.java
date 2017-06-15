@@ -1,7 +1,11 @@
-package com.github.javaparser.matchersj;
+package com.github.javaparser.matchersj.classes;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.matchersj.MatchContext;
+import com.github.javaparser.matchersj.MatchResult;
+import com.github.javaparser.matchersj.Matcher;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class AllOf<N extends Node> implements Matcher<N> {
 
-    private List<Matcher<N>> elements;
+    private List<Matcher<N>> elements = new ArrayList<>();
 
     public AllOf(Matcher<N>... elements) {
         this.elements = Arrays.asList(elements);
@@ -22,9 +26,6 @@ public class AllOf<N extends Node> implements Matcher<N> {
 
     @Override
     public MatchResult<N> match(Node node, MatchContext matchContext) {
-        List<MatchResult<N>> partialResults = elements.stream()
-                                                      .map(it -> it.match(node, matchContext).currentNode(node))
-                                                      .collect(Collectors.toList());
-        return partialResults.get(0);
+        return null;
     }
 }

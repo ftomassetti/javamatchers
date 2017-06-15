@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
  */
 public class MatchResult<N extends Node> {
 
-    private Node currentNode;
+    private N currentNode;
     private List<MatchContext> matches;
 
-    public MatchResult(Node currentNode, List<MatchContext> matches) {
+    public MatchResult(N currentNode, List<MatchContext> matches) {
         this.currentNode = currentNode;
         this.matches = matches;
     }
@@ -45,7 +45,11 @@ public class MatchResult<N extends Node> {
     }
 
     public <T extends Node> MatchResult<T> currentNode(T node) {
-        return new MatchResult(node, matches);
+        return new MatchResult<T>(node, matches);
+    }
+
+    public N getCurrentNode() {
+        return currentNode;
     }
 
     public MatchResult<N> combine (MatchResult<N> other) {
