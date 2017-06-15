@@ -50,4 +50,20 @@ public class MatchContext {
 
         return new MatchContext(tempMap);
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MatchContext)) {
+            return false;
+        }
+
+        MatchContext other = (MatchContext)obj;
+        Set<String> thisKeys = this.boundValues.keySet(),
+                    otherKeys = other.boundValues.keySet();
+
+        if(thisKeys.size() != otherKeys.size() || !thisKeys.containsAll(otherKeys)) {
+            return false;
+        }
+
+        return thisKeys.stream().allMatch(m -> this.boundValues.get(m).equals(other.boundValues.get(m)));
+    }
 }

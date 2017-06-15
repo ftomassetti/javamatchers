@@ -47,6 +47,9 @@ public class MatchResult<N extends Node> {
     public <T extends Node> MatchResult<T> currentNode(T node) {
         return new MatchResult<T>(node, matches);
     }
+    public List<MatchContext> getMatches() {
+        return this.matches;
+    }
 
     public N getCurrentNode() {
         return currentNode;

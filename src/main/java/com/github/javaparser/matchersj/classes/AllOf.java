@@ -25,7 +25,25 @@ public class AllOf<N extends Node> implements Matcher<N> {
     }
 
     @Override
-    public MatchResult<N> match(Node node, MatchContext matchContext) {
-        return null;
+    public MatchResult<N> match(N node, MatchContext matchContext) {
+        List<MatchResult<N>> partialResults = this.elements.stream()
+                                                           .map(mr -> mr.match(node, matchContext).currentNode(node))
+                                                           .collect(Collectors.toList());
+
+        return partialResults.stream().anyMatch(MatchResult::isNotEmpty) ?
+                MatchResult.empty(node): combine(partialResults);
+    }
+
+
+    private MatchResult<N> combine(List<MatchResult<N>> partialResults) {
+        return combine(partialResults.get(0), partialResults.subList(1, partialResults.size() - 1));
+    }
+
+    private MatchResult<N> combine(MatchResult<N> matchResult, List<MatchResult<N>> partialResults) {
+        if (partialResults.isEmpty()) {
+            return matchResult;
+        } else {
+            return combine(matchResult.combine(partialResults.get(0)), partialResults.subList(1, partialResults.size() - 1));
+        }
     }
 }
