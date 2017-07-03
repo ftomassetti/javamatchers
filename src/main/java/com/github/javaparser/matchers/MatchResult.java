@@ -2,10 +2,11 @@ package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
 
-import java.util.Collections;
+import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MatchResult<N extends Node> {
@@ -57,7 +58,7 @@ public class MatchResult<N extends Node> {
             return MatchResult.<N>empty((N)currentNode);
         }
 
-        HashSet<MatchContext> combinations = new HashSet<MatchContext>();
+        Set<MatchContext> combinations = new HashSet<MatchContext>();
 
         for (MatchContext mc : matches) {
             for (MatchContext otherMc : other.matches) {
@@ -68,11 +69,5 @@ public class MatchResult<N extends Node> {
         return new MatchResult(currentNode, combinations.stream()
                                                         .filter(Objects::nonNull)
                                                         .collect(Collectors.toList()));
-    }
-
-    public static void main(String[] args) {
-        String str = "lala";
-        String str2 = str.concat("lele");
-
     }
 }

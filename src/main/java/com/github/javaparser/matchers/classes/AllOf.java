@@ -15,10 +15,10 @@ public class AllOf<N extends Node> implements Matcher<N> {
     private List<Matcher<N>> elements = new ArrayList<>();
 
     public AllOf(Matcher<N>... elements) {
-        this.elements = Arrays.asList(elements);
         if (elements.length == 0) {
             throw new IllegalArgumentException();
         }
+        this.elements = Arrays.asList(elements);
     }
 
     @Override

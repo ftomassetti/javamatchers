@@ -8,9 +8,6 @@ import com.github.javaparser.matchers.Matcher;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by cdo on 6/15/17.
- */
 public class HasDescendant<N extends Node> implements Matcher<N> {
 
     Matcher<Node> descendantMatcher;

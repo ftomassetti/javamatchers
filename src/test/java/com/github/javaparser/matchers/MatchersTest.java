@@ -5,8 +5,6 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -17,18 +15,11 @@ import static org.junit.Assert.*;
 import static com.github.javaparser.matchers.Matchers.*;
 
 public class MatchersTest {
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public  void testIsMatcher() {
         Node ast = JavaParser.parseStatement("if (true) { }");
-        List<MatchResult<Node>> matches = match(ast, Is(IfStmt.class));
+        List<MatchResult<Node>> matches = match(ast, is(IfStmt.class));
         assertEquals(1, matches.size());
         assertTrue(matches.stream().anyMatch(mr -> IfStmt.class.isInstance(mr.getCurrentNode())));
     }
@@ -42,7 +33,7 @@ public class MatchersTest {
                 + "        }"
                 + "    }"
                 + "}");
-        List<MatchResult<Node>> matches = match(ast, Is(ForeachStmt.class));
+        List<MatchResult<Node>> matches = match(ast, is(ForeachStmt.class));
         assertTrue(matches.isEmpty());
     }
 
@@ -56,7 +47,7 @@ public class MatchersTest {
                         + "       }"
                         + "    }"
                         + "}");
-        List<MatchResult<Node>> matches = match(ast, Is(WhileStmt.class));
+        List<MatchResult<Node>> matches = match(ast, is(WhileStmt.class));
         assertEquals(1, matches.size());
         assertTrue(WhileStmt.class.isInstance(matches.get(0).getCurrentNode()));
         assertEquals(matches.get(0).getMatches(), Arrays.asList(MatchContext.empty()));
@@ -72,7 +63,7 @@ public class MatchersTest {
             + "        }"
             + "    }"
             + "}");
-        List<MatchResult<Node>> matches = match(ast, Parent(Is(WhileStmt.class)));
+        List<MatchResult<Node>> matches = match(ast, parent(is(WhileStmt.class)));
         assertEquals(2, matches.size());
         assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
         assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
@@ -89,9 +80,9 @@ public class MatchersTest {
         + "    }"
         + "}");
         List<MatchResult<Node>> matches = match(ast,
-                AnyOf(Parent(Is(WhileStmt.class)),
-                      Parent(Is(ForStmt.class)),
-                      Parent(Is(ForeachStmt.class))));
+                anyOf(parent(is(WhileStmt.class)),
+                      parent(is(ForStmt.class)),
+                      parent(is(ForeachStmt.class))));
         assertEquals(2, matches.size());
         assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
         assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
@@ -107,12 +98,12 @@ public class MatchersTest {
                         + "        }"
                         + "    }"
                         + "}");
-        List<MatchResult<Node>> matches = match(ast, AllOf(
-                                                        AnyOf(Parent(Is(WhileStmt.class)),
-                                                              Parent(Is(ForStmt.class)),
-                                                              Parent(Is(ForeachStmt.class))
+        List<MatchResult<Node>> matches = match(ast, allOf(
+                                                        anyOf(parent(is(WhileStmt.class)),
+                                                              parent(is(ForStmt.class)),
+                                                              parent(is(ForeachStmt.class))
                                                         ),
-                                                        HasDescendant(Is(MethodCallExpr.class))
+                                                        hasDescendant(is(MethodCallExpr.class))
                                                     )
                                                 );
 //        assertEquals(2, matches.size());

@@ -8,9 +8,6 @@ import com.github.javaparser.matchers.Matcher;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by cdo on 6/15/17.
- */
 public class AnyOf<N extends Node> implements Matcher<N> {
 
     List<Matcher<N>> elements;

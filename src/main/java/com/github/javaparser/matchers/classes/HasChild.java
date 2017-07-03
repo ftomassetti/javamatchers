@@ -5,9 +5,6 @@ import com.github.javaparser.matchers.MatchContext;
 import com.github.javaparser.matchers.MatchResult;
 import com.github.javaparser.matchers.Matcher;
 
-/**
- * Created by cdo on 6/15/17.
- */
 public class HasChild<N extends Node> implements Matcher<N> {
 
     Matcher<Node> childMatcher;

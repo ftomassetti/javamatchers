@@ -8,31 +8,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by cdo on 6/15/17.
- *
  * Most static methods in this class are a bare call to its classes
- * This was written in order to get better code elegancy when writting matchers
+ * This was written in order to get better code elegance when writing matchers
  */
 public class Matchers {
 
-    public static <N extends Node, T extends Node> Matcher<N> Is(Class<T> type) {
+    public static <N extends Node, T extends Node> Matcher<N> is(Class<T> type) {
         return new Is<N, T>(type);
     }
 
-
-    public static <N extends Node> Matcher<N> Parent(Matcher<Node> parentMatcher) {
+    public static <N extends Node> Matcher<N> parent(Matcher<Node> parentMatcher) {
         return new Parent(parentMatcher);
     }
 
-    public static <N extends Node> Matcher<N> AnyOf(Matcher<Node>... elements) {
+    public static <N extends Node> Matcher<N> anyOf(Matcher<Node>... elements) {
         return new AnyOf(elements);
     }
 
-    public static <N extends Node> Matcher<N> AllOf(Matcher<Node>... elements) {
+    public static <N extends Node> Matcher<N> allOf(Matcher<Node>... elements) {
         return new AllOf(elements);
     }
 
-    public static <N extends Node> Matcher<N> HasDescendant(Matcher<Node> descendantMatcher) {
+    public static <N extends Node> Matcher<N> hasDescendant(Matcher<Node> descendantMatcher) {
         return new HasDescendant(descendantMatcher);
     }
 
