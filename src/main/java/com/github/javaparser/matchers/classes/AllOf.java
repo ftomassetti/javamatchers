@@ -1,18 +1,15 @@
-package com.github.javaparser.matchersj.classes;
+package com.github.javaparser.matchers.classes;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.matchersj.MatchContext;
-import com.github.javaparser.matchersj.MatchResult;
-import com.github.javaparser.matchersj.Matcher;
+import com.github.javaparser.matchers.MatchContext;
+import com.github.javaparser.matchers.MatchResult;
+import com.github.javaparser.matchers.Matcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by djc3 on 6/14/17.
- */
 public class AllOf<N extends Node> implements Matcher<N> {
 
     private List<Matcher<N>> elements = new ArrayList<>();

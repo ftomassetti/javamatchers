@@ -1,9 +1,9 @@
-package com.github.javaparser.matchersj.classes;
+package com.github.javaparser.matchers.classes;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.matchersj.MatchContext;
-import com.github.javaparser.matchersj.MatchResult;
-import com.github.javaparser.matchersj.Matcher;
+import com.github.javaparser.matchers.MatchContext;
+import com.github.javaparser.matchers.MatchResult;
+import com.github.javaparser.matchers.Matcher;
 
 import java.util.LinkedList;
 import java.util.List;

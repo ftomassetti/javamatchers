@@ -1,13 +1,10 @@
-package com.github.javaparser.matchersj;
+package com.github.javaparser.matchers;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Created by djc3 on 6/13/17.
- */
 public class MatchContext {
     private Map<String, Object> boundValues;
 

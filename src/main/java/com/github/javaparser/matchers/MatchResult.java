@@ -1,4 +1,4 @@
-package com.github.javaparser.matchersj;
+package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
 
@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/**
- * Created by djc3 on 6/13/17.
- */
 public class MatchResult<N extends Node> {
 
     private N currentNode;

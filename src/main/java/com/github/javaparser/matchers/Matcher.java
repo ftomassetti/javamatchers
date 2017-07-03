@@ -1,4 +1,4 @@
-package com.github.javaparser.matchersj;
+package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
 

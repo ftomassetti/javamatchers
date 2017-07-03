@@ -1,7 +1,7 @@
-package com.github.javaparser.matchersj;
+package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.matchersj.classes.*;
+import com.github.javaparser.matchers.classes.*;
 import com.github.javaparser.symbolsolver.javaparser.Navigator;
 
 import java.util.List;
