@@ -27,7 +27,7 @@ public class AllOf<N extends Node> implements Matcher<N> {
                                                            .map(mr -> mr.match(node, matchContext).currentNode(node))
                                                            .collect(Collectors.toList());
 
-        return partialResults.stream().anyMatch(MatchResult::isNotEmpty) ?
+        return partialResults.stream().anyMatch(MatchResult::isEmpty) ?
                 MatchResult.empty(node) : combine(partialResults);
     }
 
