@@ -170,9 +170,11 @@ public class MatchersTest {
         List<MatchResult<Node>> matches = match(ast,
                 hasDescendant(is(MethodCallExpr.class))
         );
-        // TODO all the ancestors of the method call should be returned...
-        assertEquals(4, matches.size());
+        assertEquals(8, matches.size());
         assertTrue(matches.stream().anyMatch(mr -> ExpressionStmt.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> MethodCallExpr.class.isInstance(mr.getCurrentNode()))); // a.b(filter())
+        assertTrue(matches.stream().anyMatch(mr -> WhileStmt.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode()))); // 2 instances
         assertTrue(matches.stream().anyMatch(mr -> MethodDeclaration.class.isInstance(mr.getCurrentNode())));
         assertTrue(matches.stream().anyMatch(mr -> ClassOrInterfaceDeclaration.class.isInstance(mr.getCurrentNode())));
         assertTrue(matches.stream().anyMatch(mr -> CompilationUnit.class.isInstance(mr.getCurrentNode())));
@@ -197,7 +199,7 @@ public class MatchersTest {
                                                     )
                                                 );
         assertEquals(2, matches.size());
-//        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
-//        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
     }
 }

@@ -7,6 +7,7 @@ import com.github.javaparser.matchers.Matcher;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HasDescendant<N extends Node> implements Matcher<N> {
 
@@ -18,16 +19,17 @@ public class HasDescendant<N extends Node> implements Matcher<N> {
 
     @Override
     public MatchResult<N> match(N node, MatchContext matchContext) {
-        return getDescendants(node).stream()
-                                   .map(n -> descendantMatcher.match(n, matchContext).currentNode(node))
-                                   .findFirst().orElseGet(() -> MatchResult.empty(node));
+        MatchResult result = getDescendants(node).stream()
+                .map(n -> descendantMatcher.match(n, matchContext).currentNode(node))
+                .filter(it -> it.isNotEmpty())
+                .findFirst().orElseGet(() -> MatchResult.empty(node));
+        return result;
     }
 
     private List<Node> getDescendants(Node node) {
-        List<Node> descendants = new LinkedList<Node>();
+        List<Node> descendants = new LinkedList<>();
         descendants.addAll(node.getChildNodes());
-        node.getChildNodes().stream()
-                            .forEach(child -> descendants.addAll(getDescendants(child)));
+        node.getChildNodes().forEach(child -> descendants.addAll(getDescendants(child)));
         return descendants;
     }
 }
