@@ -1,8 +1,10 @@
 package com.github.javaparser.matchers;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+/**
+ * This class will contained the matched node and possibly bound values.
+ */
 public class MatchContext {
     private Map<String, Object> boundValues;
 
@@ -16,6 +18,13 @@ public class MatchContext {
 
     public static MatchContext empty() {
         return new MatchContext();
+    }
+
+    public Object getBoundValue(String name) {
+        if (!boundValues.containsKey(name)) {
+            throw new IllegalArgumentException();
+        }
+        return boundValues.get(name);
     }
 
     public MatchContext bind(String name, Object value) {

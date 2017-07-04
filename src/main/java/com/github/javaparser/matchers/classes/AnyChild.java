@@ -26,7 +26,7 @@ public class AnyChild<N extends Node> implements Matcher<N> {
                                    .map(mr -> mr.getMatches())
                                    .forEach(mcl -> mcl.forEach(mc -> {if (!partial.contains(mc)) {
                                        partial.add(mc);
-                                    }}));
-        return new MatchResult<N>(node, partial);
+                                   }}));
+        return new MatchResult<>(node, partial);
     }
 }

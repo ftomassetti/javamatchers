@@ -58,7 +58,7 @@ public class MatchResult<N extends Node> {
             return MatchResult.empty((N)currentNode);
         }
 
-        Set<MatchContext> combinations = new HashSet<MatchContext>();
+        Set<MatchContext> combinations = new HashSet<>();
 
         for (MatchContext mc : matches) {
             for (MatchContext otherMc : other.matches) {
@@ -67,7 +67,6 @@ public class MatchResult<N extends Node> {
         }
 
         return new MatchResult(currentNode, combinations.stream()
-                                                        .filter(Objects::nonNull)
                                                         .collect(Collectors.toList()));
     }
 

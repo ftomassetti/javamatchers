@@ -13,6 +13,8 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.github.javaparser.matchers.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PatternsTest {
 
@@ -21,6 +23,34 @@ public class PatternsTest {
     @Before
     public void setup() {
         bean1 = JavaParser.parse(this.getClass().getResourceAsStream("/Bean1.java"));
+    }
+
+    @Test
+    public void testFindFields() {
+        List<MatchResult<Node>> matches = match(bean1,
+                allOf(
+                        isClass(),
+                        anyChild(new Binder<>("field", is(FieldDeclaration.class, f -> f.isPrivate() && !f.isStatic())))
+        ));
+        assertEquals(1, matches.size());
+        assertEquals(3, matches.get(0).getMatches().size());
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("field") == bean1.getClassByName("A").get().getFieldByName("foo").get()));
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("field") == bean1.getClassByName("A").get().getFieldByName("bar").get()));
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("field") == bean1.getClassByName("A").get().getFieldByName("zum").get()));
+    }
+
+    @Test
+    public void testFindGetters() {
+        List<MatchResult<Node>> matches = match(bean1,
+                allOf(
+                        isClass(),
+                        anyChild(new Binder<>("getter", is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty())))
+                ));
+        assertEquals(1, matches.size());
+        assertEquals(3, matches.get(0).getMatches().size());
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("getter") == bean1.getClassByName("A").get().getMethodsByName("getFoo").get(0)));
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("getter") == bean1.getClassByName("A").get().getMethodsByName("getBar").get(0)));
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("getter") == bean1.getClassByName("A").get().getMethodsByName("getZum").get(0)));
     }
 
     @Test
