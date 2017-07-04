@@ -16,7 +16,7 @@ public class AllOf<N extends Node> implements Matcher<N> {
 
     public AllOf(Matcher<N>... elements) {
         if (elements.length == 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("AllOf should contain at least one element matcher");
         }
         this.elements = Arrays.asList(elements);
     }
@@ -28,10 +28,9 @@ public class AllOf<N extends Node> implements Matcher<N> {
                                                            .collect(Collectors.toList());
 
         return partialResults.stream().anyMatch(MatchResult::isNotEmpty) ?
-                MatchResult.empty(node): combine(partialResults);
+                MatchResult.empty(node) : combine(partialResults);
     }
-
-
+    
     private MatchResult<N> combine(List<MatchResult<N>> partialResults) {
         if (partialResults.size() == 1) {
             return partialResults.get(0);

@@ -10,15 +10,17 @@ import java.util.List;
 
 public class AnyOf<N extends Node> implements Matcher<N> {
 
-    List<Matcher<N>> elements;
+    private List<Matcher<N>> elements;
 
     public AnyOf(Matcher<N>... elements) {
+        if (elements.length == 0) {
+            throw new IllegalArgumentException("AnyOf should contain at least one element matcher");
+        }
         this.elements = Arrays.asList(elements);
     }
 
     @Override
     public MatchResult<N> match(N node, MatchContext matchContext) {
-        MatchResult<N> result;
         return elements.stream()
                        .map(m -> m.match(node, matchContext).currentNode(node))
                        .filter(MatchResult::isNotEmpty)
