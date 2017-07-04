@@ -33,6 +33,9 @@ public class AllOf<N extends Node> implements Matcher<N> {
 
 
     private MatchResult<N> combine(List<MatchResult<N>> partialResults) {
+        if (partialResults.size() == 1) {
+            return partialResults.get(0);
+        }
         return combine(partialResults.get(0), partialResults.subList(1, partialResults.size() - 1));
     }
 
