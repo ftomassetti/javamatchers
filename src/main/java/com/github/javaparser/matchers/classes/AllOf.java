@@ -7,6 +7,7 @@ import com.github.javaparser.matchers.Matcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,8 @@ public class AllOf<N extends Node> implements Matcher<N> {
         if (partialResults.isEmpty()) {
             return matchResult;
         } else {
-            return combine(matchResult.combine(partialResults.get(0)), partialResults.subList(1, partialResults.size() - 1));
+            return combine(matchResult.combine(partialResults.get(0)),
+                    partialResults.size() == 1 ? Collections.emptyList() : partialResults.subList(1, partialResults.size() - 1));
         }
     }
 }

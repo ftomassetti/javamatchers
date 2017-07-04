@@ -28,8 +28,8 @@ public class PatternsTest {
         List<MatchResult<Node>> matches = match(bean1,
                 allOf(
                         isClass(),
-                        hasChild(new Binder<>("field", is(FieldDeclaration.class, f -> f.isPrivate() && !f.isStatic()))),
-                        hasChild(is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty())),
+                        anyChild(new Binder<>("field", is(FieldDeclaration.class, f -> f.isPrivate() && !f.isStatic()))),
+                        anyChild(new Binder<>("getter", is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty()))),
                         hasChild(is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType)
                 ))
         );

@@ -47,6 +47,10 @@ public class Matchers {
         return new HasChild(descendantMatcher);
     }
 
+    public static <N extends Node> Matcher<N> anyChild(Matcher<Node> descendantMatcher) {
+        return new AnyChild(descendantMatcher);
+    }
+
     public static <N extends Node> Matcher<N> hasDescendant(Matcher<Node> descendantMatcher) {
         return new HasDescendant(descendantMatcher);
     }
