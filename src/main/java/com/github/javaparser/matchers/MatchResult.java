@@ -55,7 +55,7 @@ public class MatchResult<N extends Node> {
 
     public MatchResult<N> combine (MatchResult<N> other) {
         if (this.isEmpty() || other.isEmpty()) {
-            return MatchResult.<N>empty((N)currentNode);
+            return MatchResult.empty((N)currentNode);
         }
 
         Set<MatchContext> combinations = new HashSet<MatchContext>();

@@ -1,7 +1,10 @@
 package com.github.javaparser.matchers;
 
 import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.*;
@@ -89,6 +92,95 @@ public class MatchersTest {
     }
 
     @Test
+    public void findAllStatementsInsideAWhileOrAForWrappedInAllOf() {
+        Node ast = JavaParser.parse(
+                "class Foo {"
+                        + "    public void a() {"
+                        + "        while (true) {"
+                        + "            a.b(filter());"
+                        + "        }"
+                        + "    }"
+                        + "}");
+        List<MatchResult<Node>> matches = match(ast,
+                allOf(anyOf(parent(is(WhileStmt.class)),
+                        parent(is(ForStmt.class)),
+                        parent(is(ForeachStmt.class))
+                ))
+        );
+        assertEquals(2, matches.size());
+        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
+    }
+
+    @Test
+    public void findAllStatementsInsideAWhileOrAFor() {
+        Node ast = JavaParser.parse(
+                "class Foo {"
+                        + "    public void a() {"
+                        + "        while (true) {"
+                        + "            a.b(filter());"
+                        + "        }"
+                        + "    }"
+                        + "}");
+        List<MatchResult<Node>> matches = match(ast,
+                anyOf(parent(is(WhileStmt.class)),
+                        parent(is(ForStmt.class)),
+                        parent(is(ForeachStmt.class))
+                )
+        );
+        assertEquals(2, matches.size());
+        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
+    }
+
+    @Test
+    public void findAllStatementsInsideAWhileOrAForDuplicate() {
+        Node ast = JavaParser.parse(
+                "class Foo {"
+                        + "    public void a() {"
+                        + "        while (true) {"
+                        + "            a.b(filter());"
+                        + "        }"
+                        + "    }"
+                        + "}");
+        List<MatchResult<Node>> matches = match(ast,
+                allOf(anyOf(parent(is(WhileStmt.class)),
+                        parent(is(ForStmt.class)),
+                        parent(is(ForeachStmt.class))
+                ), anyOf(parent(is(WhileStmt.class)),
+                        parent(is(ForStmt.class)),
+                        parent(is(ForeachStmt.class))
+                ))
+        );
+        assertEquals(2, matches.size());
+        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
+    }
+
+    @Test
+    public void findAllElementsInsideCalls() {
+        Node ast = JavaParser.parse(
+                "class Foo {"
+                        + "    public void a() {"
+                        + "        while (true) {"
+                        + "            a.b(filter());"
+                        + "        }"
+                        + "    }"
+                        + "}");
+        List<MatchResult<Node>> matches = match(ast,
+                hasDescendant(is(MethodCallExpr.class))
+        );
+        assertEquals(8, matches.size());
+        assertTrue(matches.stream().anyMatch(mr -> ExpressionStmt.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> MethodCallExpr.class.isInstance(mr.getCurrentNode()))); // a.b(filter())
+        assertTrue(matches.stream().anyMatch(mr -> WhileStmt.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode()))); // 2 instances
+        assertTrue(matches.stream().anyMatch(mr -> MethodDeclaration.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> ClassOrInterfaceDeclaration.class.isInstance(mr.getCurrentNode())));
+        assertTrue(matches.stream().anyMatch(mr -> CompilationUnit.class.isInstance(mr.getCurrentNode())));
+    }
+
+    @Test
     public void findAllStatementsInsideAWhileOrAForWhichAreCallsToMethodNamesFilter() {
         Node ast = JavaParser.parse(
                 "class Foo {"
@@ -106,8 +198,7 @@ public class MatchersTest {
                                                         hasDescendant(is(MethodCallExpr.class))
                                                     )
                                                 );
-//        assertEquals(2, matches.size());
-//        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
-//        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
+        assertEquals(1, matches.size());
+        assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
     }
 }
