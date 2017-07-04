@@ -54,13 +54,27 @@ public class PatternsTest {
     }
 
     @Test
+    public void testFindSetters() {
+        List<MatchResult<Node>> matches = match(bean1,
+                allOf(
+                        isClass(),
+                        anyChild(new Binder<>("setter", is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType)))
+                ));
+        assertEquals(1, matches.size());
+        assertEquals(3, matches.get(0).getMatches().size());
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("setter") == bean1.getClassByName("A").get().getMethodsByName("setFoo").get(0)));
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("setter") == bean1.getClassByName("A").get().getMethodsByName("setBar").get(0)));
+        assertTrue(matches.get(0).getMatches().stream().anyMatch(matchContext -> matchContext.getBoundValue("setter") == bean1.getClassByName("A").get().getMethodsByName("setZum").get(0)));
+    }
+
+    @Test
     public void testPropertyPattern() {
         List<MatchResult<Node>> matches = match(bean1,
                 allOf(
                         isClass(),
                         anyChild(new Binder<>("field", is(FieldDeclaration.class, f -> f.isPrivate() && !f.isStatic()))),
                         anyChild(new Binder<>("getter", is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty()))),
-                        hasChild(is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType)
+                        anyChild(new Binder<>("setter", (is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType)))
                 ))
         );
         System.out.println("Matches: " + matches);
