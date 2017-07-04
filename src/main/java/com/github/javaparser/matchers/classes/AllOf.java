@@ -30,7 +30,7 @@ public class AllOf<N extends Node> implements Matcher<N> {
         return partialResults.stream().anyMatch(MatchResult::isNotEmpty) ?
                 MatchResult.empty(node) : combine(partialResults);
     }
-    
+
     private MatchResult<N> combine(List<MatchResult<N>> partialResults) {
         if (partialResults.size() == 1) {
             return partialResults.get(0);

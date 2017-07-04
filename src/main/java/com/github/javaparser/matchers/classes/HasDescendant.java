@@ -10,7 +10,7 @@ import java.util.List;
 
 public class HasDescendant<N extends Node> implements Matcher<N> {
 
-    Matcher<Node> descendantMatcher;
+    private Matcher<Node> descendantMatcher;
 
     public HasDescendant(Matcher<Node> descendantMatcher) {
         this.descendantMatcher = descendantMatcher;

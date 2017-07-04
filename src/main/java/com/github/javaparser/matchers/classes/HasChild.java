@@ -7,7 +7,7 @@ import com.github.javaparser.matchers.Matcher;
 
 public class HasChild<N extends Node> implements Matcher<N> {
 
-    Matcher<Node> childMatcher;
+    private Matcher<Node> childMatcher;
 
     public HasChild(Matcher<Node> childMatcher) {
         this.childMatcher = childMatcher;
