@@ -198,8 +198,7 @@ public class MatchersTest {
                                                         hasDescendant(is(MethodCallExpr.class))
                                                     )
                                                 );
-        assertEquals(2, matches.size());
-        assertTrue(matches.stream().anyMatch(mr -> BooleanLiteralExpr.class.isInstance(mr.getCurrentNode())));
+        assertEquals(1, matches.size());
         assertTrue(matches.stream().anyMatch(mr -> BlockStmt.class.isInstance(mr.getCurrentNode())));
     }
 }
