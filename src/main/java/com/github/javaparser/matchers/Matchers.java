@@ -1,10 +1,12 @@
 package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.matchers.classes.*;
 import com.github.javaparser.symbolsolver.javaparser.Navigator;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -14,7 +16,19 @@ import java.util.stream.Collectors;
 public class Matchers {
 
     public static <N extends Node, T extends Node> Matcher<N> is(Class<T> type) {
-        return new Is<N, T>(type);
+        return new Is<>(type);
+    }
+
+    public static <N extends Node, T extends Node> Matcher<N> is(Class<T> type, Predicate<T> condition) {
+        return new Is<>(type, condition);
+    }
+
+    public static <N extends Node, T extends Node> Matcher<N> isClass() {
+        return is(ClassOrInterfaceDeclaration.class, c -> !c.isInterface());
+    }
+
+    public static <N extends Node, T extends Node> Matcher<N> isInterface() {
+        return is(ClassOrInterfaceDeclaration.class, c -> c.isInterface());
     }
 
     public static <N extends Node> Matcher<N> parent(Matcher<Node> parentMatcher) {
@@ -27,6 +41,10 @@ public class Matchers {
 
     public static <N extends Node> Matcher<N> allOf(Matcher<Node>... elements) {
         return new AllOf(elements);
+    }
+
+    public static <N extends Node> Matcher<N> hasChild(Matcher<Node> descendantMatcher) {
+        return new HasChild(descendantMatcher);
     }
 
     public static <N extends Node> Matcher<N> hasDescendant(Matcher<Node> descendantMatcher) {

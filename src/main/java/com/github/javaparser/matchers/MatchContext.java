@@ -1,8 +1,6 @@
 package com.github.javaparser.matchers;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MatchContext {
@@ -21,30 +19,22 @@ public class MatchContext {
     }
 
     public MatchContext bind(String name, Object value) {
-        Map<String, Object> temp = Collections.emptyMap();
+        Map<String, Object> temp = new HashMap<>();
         temp.putAll(this.boundValues);
         temp.put(name, value);
         return new MatchContext(temp);
     }
 
     public MatchContext combine(MatchContext otherMc) {
-        Set<?> tempSet = this.boundValues.keySet();
+        Set<String> tempSet = new HashSet<>(this.boundValues.keySet());
         tempSet.retainAll(otherMc.boundValues.keySet());
         if (tempSet.stream()
-                   .anyMatch(m -> this.boundValues.get(m) != otherMc.boundValues.get(m)))
-        {
+                   .anyMatch(m -> !this.boundValues.get(m).equals(otherMc.boundValues.get(m)))) {
             return null;
         }
 
-        Map<String, Object> tempMap = this.boundValues;
-
-        for(String s : otherMc.boundValues.keySet()
-                                          .stream()
-                                          .filter(k -> !otherMc.boundValues.keySet().contains(k))
-                                          .collect(Collectors.toList())) {
-            tempMap.put(s, otherMc.boundValues.get(s));
-        }
-
+        Map<String, Object> tempMap = new HashMap<>(this.boundValues);
+        tempMap.putAll(otherMc.boundValues);
         return new MatchContext(tempMap);
     }
 
@@ -62,5 +52,17 @@ public class MatchContext {
         }
 
         return thisKeys.stream().allMatch(m -> this.boundValues.get(m).equals(other.boundValues.get(m)));
+    }
+
+    @Override
+    public int hashCode() {
+        return boundValues.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "MatchContext{" +
+                "boundValues=" + boundValues +
+                '}';
     }
 }

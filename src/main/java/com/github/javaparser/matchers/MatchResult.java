@@ -70,4 +70,30 @@ public class MatchResult<N extends Node> {
                                                         .filter(Objects::nonNull)
                                                         .collect(Collectors.toList()));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MatchResult<?> that = (MatchResult<?>) o;
+
+        if (!currentNode.equals(that.currentNode)) return false;
+        return matches.equals(that.matches);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = currentNode.hashCode();
+        result = 31 * result + matches.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "MatchResult{" +
+                "currentNode=" + currentNode +
+                ", matches=" + matches +
+                '}';
+    }
 }
