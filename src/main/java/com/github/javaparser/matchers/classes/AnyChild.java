@@ -21,9 +21,9 @@ public class AnyChild<N extends Node> implements Matcher<N> {
     public MatchResult<N> match(N node, MatchContext matchContext) {
         List<MatchContext> partial = new LinkedList<>();
         node.getChildNodes().stream()
-                                   .map(n -> childMatcher.match(n, matchContext).currentNode(node))
+                                   .map(n -> childMatcher.match(n, matchContext).currentNode(n))
                                    .filter(MatchResult::isNotEmpty)
-                                   .map(mr -> mr.getMatches())
+                                   .map(MatchResult::getMatches)
                                    .forEach(mcl -> mcl.forEach(mc -> {if (!partial.contains(mc)) {
                                        partial.add(mc);
                                    }}));

@@ -72,11 +72,22 @@ public class PatternsTest {
         List<MatchResult<Node>> matches = match(bean1,
                 allOf(
                         isClass(),
-                        anyChild(new Binder<>("field", is(FieldDeclaration.class, f -> f.isPrivate() && !f.isStatic()))),
-                        anyChild(new Binder<>("getter", is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty()))),
-                        anyChild(new Binder<>("setter", (is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType)))
-                ))
-        );
+                        anyChild(new Binder<>("type",
+                                        new Binder<>("name",
+                                                is(FieldDeclaration.class,
+                                                        f -> f.isPrivate()
+                                                        && !f.isStatic()
+                                                        && f.getVariables().size() == 1),
+                                                f -> ((FieldDeclaration)f).getVariables().get(0).getName()),
+                                        f -> ((FieldDeclaration)f).getVariables().get(0).getType())),
+                        anyChild(new Binder<>("type",
+                                        is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty()),
+                                        m -> ((MethodDeclaration)m).getType())),
+                        anyChild(new Binder<>("type",
+                                        is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType),
+                                        m -> ((MethodDeclaration)m).getParameter(0).getType()))
+                ));
         System.out.println("Matches: " + matches);
+        System.out.println("Matches: " + matches.get(0).getMatches().size());
     }
 }

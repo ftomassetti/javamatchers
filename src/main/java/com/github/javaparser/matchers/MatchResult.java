@@ -1,12 +1,9 @@
 package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.utils.Pair;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MatchResult<N extends Node> {
@@ -15,6 +12,14 @@ public class MatchResult<N extends Node> {
     private List<MatchContext> matches;
 
     public MatchResult(N currentNode, List<MatchContext> matches) {
+        if (matches == null) {
+            throw new IllegalArgumentException();
+        }
+        for (MatchContext mc : matches) {
+            if (mc == null) {
+                throw new IllegalArgumentException();
+            }
+        }
         this.currentNode = currentNode;
         this.matches = matches;
     }
@@ -28,9 +33,13 @@ public class MatchResult<N extends Node> {
     }
 
     public MatchResult<N> bind(String name) {
+        return bind(name, currentNode);
+    }
+
+    public MatchResult<N> bind(String name, Object value) {
         List<MatchContext> list = matches.stream()
-                                         .map(ctx -> ctx.bind(name, currentNode))
-                                         .collect(Collectors.toList());
+                .map(ctx -> ctx.bind(name, value))
+                .collect(Collectors.toList());
         return new MatchResult(currentNode, list);
     }
 
@@ -66,7 +75,7 @@ public class MatchResult<N extends Node> {
             }
         }
 
-        return new MatchResult(currentNode, combinations.stream()
+        return new MatchResult(currentNode, combinations.stream().filter(Objects::nonNull)
                                                         .collect(Collectors.toList()));
     }
 
