@@ -7,10 +7,13 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.type.VoidType;
 import com.github.javaparser.matchers.classes.Binder;
+import com.github.javaparser.utils.StringEscapeUtils;
+import com.github.javaparser.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static com.github.javaparser.matchers.Matchers.*;
 import static org.junit.Assert.assertEquals;
@@ -69,6 +72,15 @@ public class PatternsTest {
 
     @Test
     public void testPropertyPattern() {
+        Function<Node, String> getterNameToPropertyName = m -> {
+            String getterName = ((MethodDeclaration)m).getName().getIdentifier();
+            String res = (getterName.startsWith("get") && getterName.length() > "get".length()) ? Utils.decapitalize(getterName.substring("get".length())) : null;
+            return res;
+        };
+        Function<Node, String> setterNameToPropertyName = m -> {
+            String getterName = ((MethodDeclaration)m).getName().getIdentifier();
+            return (getterName.startsWith("set") && getterName.length() > "set".length()) ? Utils.decapitalize(getterName.substring("set".length())) : null;
+        };
         List<MatchResult<Node>> matches = match(bean1,
                 allOf(
                         isClass(),
@@ -78,16 +90,27 @@ public class PatternsTest {
                                                         f -> f.isPrivate()
                                                         && !f.isStatic()
                                                         && f.getVariables().size() == 1),
-                                                f -> ((FieldDeclaration)f).getVariables().get(0).getName()),
+                                                f -> ((FieldDeclaration)f).getVariables().get(0).getName().getIdentifier()),
                                         f -> ((FieldDeclaration)f).getVariables().get(0).getType())),
                         anyChild(new Binder<>("type",
-                                        is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty()),
+                                        new Binder<>("name",
+                                                is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().isEmpty()),
+                                                getterNameToPropertyName),
                                         m -> ((MethodDeclaration)m).getType())),
                         anyChild(new Binder<>("type",
-                                        is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType),
+                                        new Binder<>("name",
+                                                is(MethodDeclaration.class, m -> m.isPublic() && !m.isStatic() && m.getParameters().size() == 1 && m.getType() instanceof VoidType),
+                                                setterNameToPropertyName),
                                         m -> ((MethodDeclaration)m).getParameter(0).getType()))
                 ));
-        System.out.println("Matches: " + matches);
-        System.out.println("Matches: " + matches.get(0).getMatches().size());
+        assertEquals(1, matches.size());
+        assertEquals(3, matches.get(0).getMatches().size());
+        MatchContext matchContext;
+        matchContext = matches.get(0).getMatches().stream().filter(e -> e.getBoundValue("name").equals("foo")).findFirst().get();
+        assertEquals("int", matchContext.getBoundValue("type").toString());
+        matchContext = matches.get(0).getMatches().stream().filter(e -> e.getBoundValue("name").equals("bar")).findFirst().get();
+        assertEquals("String", matchContext.getBoundValue("type").toString());
+        matchContext = matches.get(0).getMatches().stream().filter(e -> e.getBoundValue("name").equals("zum")).findFirst().get();
+        assertEquals("List<Double>", matchContext.getBoundValue("type").toString());
     }
 }
