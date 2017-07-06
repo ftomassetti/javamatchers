@@ -7,7 +7,7 @@ A library to identify patterns in Java code. Based on [JavaParser](https://javap
 For example, this code cand be used to find all bean properties, i.e., all sets of a field, a getter and a setter with corresponding names and type:
 
 ```java
-List<MatchResult<Node>> matches = match(bean1,
+List<MatchResult<Node>> matches = match(myJavaCompilationUnit,
         allOf(
                 isClass(),
                 anyChild(new Binder<>("type",
