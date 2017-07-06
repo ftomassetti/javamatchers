@@ -1,11 +1,15 @@
 package com.github.javaparser.matchers;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.utils.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The result of a match operation.
+ * The result could represent a failure: in that case the result will be empty.
+ * When representing a success it will contain all possible contexts that can be obtained.
+ */
 public class MatchResult<N extends Node> {
 
     private N currentNode;

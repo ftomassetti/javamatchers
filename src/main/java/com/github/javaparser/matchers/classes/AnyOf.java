@@ -8,6 +8,9 @@ import com.github.javaparser.matchers.Matcher;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This Matcher will be satisfied if at least one of the element matchers are satisfied.
+ */
 public class AnyOf<N extends Node> implements Matcher<N> {
 
     private List<Matcher<N>> elements;

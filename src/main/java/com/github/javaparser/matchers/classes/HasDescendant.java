@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This Matcher will be satisfied if at least one descendant of the node is matched by the descendantMatcher.
+ */
 public class HasDescendant<N extends Node> implements Matcher<N> {
 
     private Matcher<Node> descendantMatcher;

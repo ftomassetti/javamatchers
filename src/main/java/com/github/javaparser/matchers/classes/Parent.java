@@ -5,6 +5,9 @@ import com.github.javaparser.matchers.MatchContext;
 import com.github.javaparser.matchers.MatchResult;
 import com.github.javaparser.matchers.Matcher;
 
+/**
+ * This Matcher will be satisfied if at the parent of the node satisfies the parentMatcher.
+ */
 public class Parent<N extends Node> implements Matcher<N> {
 
     private Matcher<N> parentMatcher;

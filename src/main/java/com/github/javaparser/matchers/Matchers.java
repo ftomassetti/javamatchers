@@ -10,8 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * Most static methods in this class are a bare call to its classes
- * This was written in order to get better code elegance when writing matchers
+ * This utility class provides shortcuts to instantiate the different matchers.
  */
 public class Matchers {
 

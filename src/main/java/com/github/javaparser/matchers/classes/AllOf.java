@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This Matcher will be satisfied if all the element matchers are satisfied.
+ */
 public class AllOf<N extends Node> implements Matcher<N> {
 
     private List<Matcher<N>> elements = new ArrayList<>();

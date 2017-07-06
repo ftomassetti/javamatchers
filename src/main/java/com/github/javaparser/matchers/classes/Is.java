@@ -8,6 +8,11 @@ import com.google.common.base.Predicates;
 
 import java.util.function.Predicate;
 
+/**
+ * This Matcher will be satisfied if the node has the expected type and optionally satisfy an additional condition.
+ * @param <N>
+ * @param <T>
+ */
 public class Is<N extends Node, T extends Node> implements Matcher<N>{
 
     private Class<T> type;

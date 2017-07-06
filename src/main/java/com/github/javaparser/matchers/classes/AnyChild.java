@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This matcher will match all the children which match the given childMatcher.
+ */
 public class AnyChild<N extends Node> implements Matcher<N> {
 
     private Matcher<Node> childMatcher;
